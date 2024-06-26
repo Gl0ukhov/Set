@@ -7,12 +7,27 @@
 
 import SwiftUI
 
-struct SetGame___ViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+@Observable
+class SetGameViewModel {
+    static let figure = ["Circle", "Capsule", "RoundedRectangle"]
+    static let color = ["Red", "Green", "Blue"]
+    static let cardTexture = ["Fill", "Empty", "Shade"]
+    static let number = ["One", "Two", "Three"]
+    
+    var model = SetModel()
+    
+    func newGame() {
+        print(model.cards.count)
     }
+    
+    
+    
+    var card: [SetModel.Card] {
+        model.cards
+    }
+    
+    
+    
 }
 
-#Preview {
-    SetGame___ViewModel()
-}
+
