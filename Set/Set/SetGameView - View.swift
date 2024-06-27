@@ -39,6 +39,7 @@ struct SetGameView : View {
     
     var newGame: some View {
         Button("New game") {
+            viewModel.numberOfcard()
         }
         .padding()
     }
@@ -56,7 +57,7 @@ struct Card: View {
             RoundedRectangle(cornerRadius: 25.0)
                 .strokeBorder(style: StrokeStyle(lineWidth: 1))
             
-            Text(card.figure)
+            Text(card.figure!)
 //                .strokeBorder(style: StrokeStyle())
                 .padding()
                 .foregroundStyle(.red)
