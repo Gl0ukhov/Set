@@ -13,11 +13,7 @@ struct SetGameView : View {
     var body: some View {
         VStack {
             header
-            Spacer()
-            ScrollView {
-                cards
-            }
-            Spacer()
+            cards
             newGame
         }
     }
@@ -29,17 +25,14 @@ struct SetGameView : View {
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 95), spacing: 0)], content: {
-            ForEach(viewModel.card) { card in
-                Card(card: card)
-            }
-            
-        })
+        AspectVGrid(viewModel.card, aspectRatio: 2/3) { card in
+            Card(card: card)
+                .padding(5)
+        }
     }
     
     var newGame: some View {
         Button("New game") {
-            viewModel.numberOfcard()
         }
         .padding()
     }
@@ -52,19 +45,28 @@ struct Card: View {
         self.card = card
     }
     
+    var figure: String {
+        let figure = switch card.figure {
+        case "Circle":
+            "circle"
+        case "Capsule":
+            "capsule"
+        case "RoundedRectangle":
+            "rectangle"
+        default:
+            "questionmark.square.dashed"
+        }
+        return figure
+    }
+    
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 25.0)
-                .strokeBorder(style: StrokeStyle(lineWidth: 1))
-            
-            Text(card.figure!)
-//                .strokeBorder(style: StrokeStyle())
-                .padding()
-                .foregroundStyle(.red)
-                .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+            let base = RoundedRectangle(cornerRadius: 10)
+            base
+                .strokeBorder(style: StrokeStyle(lineWidth: 2))
+
                 
         }
-        .padding(5)
     }
 }
 

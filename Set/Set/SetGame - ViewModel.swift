@@ -23,26 +23,9 @@ class SetGameViewModel {
     }
     
     private static func createSetGame() -> SetModel {
-        return SetModel(figure: SetGameViewModel.figure, cardColor: SetGameViewModel.color, numberOfSymbol: SetGameViewModel.number, cardTexture: SetGameViewModel.cardTexture)
+        SetModel(figures: figure, colors: color, numbers: number, textures: cardTexture)
     }
     
-    func numberOfcard() {
-        count = 0
-        for i in 0..<3 {
-            count += i
-            for k in 0..<3 {
-                count += k
-                for j in 0..<3 {
-                    count += j
-                    for l in 0..<3 {
-                        count += l
-                        
-                    }
-                }
-            }
-        }
-        print(count)
-    }
     
     var card: [SetModel.Card] {
         model.cards
