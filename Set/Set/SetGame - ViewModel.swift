@@ -24,7 +24,7 @@ class SetGameViewModel {
     
     private static func createSetGame() -> SetModel {
         SetModel(figures: figure, colors: color, numbers: number, textures: cardTexture)
-//        SetModel(testCard: 20)
+//        SetModel(testCard: 3)
         
     }
     

@@ -27,15 +27,14 @@ struct SetGameView : View {
     var cards: some View {
         AspectVGrid(viewModel.card, aspectRatio: 2/3) { card in
             Card(card: card)
-                .padding(5)
+                .padding(3)
         }
     }
     
     var newGame: some View {
         Button("New game") {
         }
-        .padding()
-    }
+        .padding()    }
 }
 
 struct Card: View {
@@ -49,12 +48,28 @@ struct Card: View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: 10)
             base
-                .strokeBorder(style: StrokeStyle(lineWidth: 2))
-
+                .stroke(.black, lineWidth: 1.5)
+            VStack(spacing: 0) {
+                switch card.numberOfSymbol {
+                case "One":
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                case "Two":
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                case "Three":
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                default:
+                    Figure(color: card.color, numberOfSymbol: card.numberOfSymbol, shapeType: card.shapeType, fill: card.fill)
+                }
                 
+            }
         }
     }
 }
+
+
 
 #Preview {
     SetGameView(viewModel: SetGameViewModel())

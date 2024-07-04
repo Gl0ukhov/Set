@@ -18,7 +18,7 @@ struct SetModel {
                 for number in numbers {
                     for texture in textures {
                         let id = String(cards.count + 1)
-                        cards.append(Card(figure: figure, cardColor: color, numberOfSymbol: number, cardTexture: texture, id: id))
+                        cards.append(Card(shapeType: figure, color: color, numberOfSymbol: number, fill: texture, id: id))
                     }
                 }
             }
@@ -26,17 +26,19 @@ struct SetModel {
     }
     
     init(testCard: Int) {
-        for i in 0..<testCard {
-            cards.append(Card(figure: "figure", cardColor: "color", numberOfSymbol: "number", cardTexture: "texture", id: String(i)))
+        for _ in 0..<testCard {
+            cards.append(Card(shapeType: "Circle", color: "Red", numberOfSymbol: "One", fill: "Fill", id: UUID().uuidString))
+            cards.append(Card(shapeType: "Capsule", color: "Green", numberOfSymbol: "Two", fill: "Empty", id: UUID().uuidString))
+            cards.append(Card(shapeType: "RoundedRectangle", color: "Blue", numberOfSymbol: "Three", fill: "Shade", id: UUID().uuidString))
         }
     }
     
     struct Card: Identifiable {
         var isMatch = false
-        let figure: String
-        let cardColor: String
+        let shapeType: String
+        let color: String
         let numberOfSymbol: String
-        let cardTexture: String
+        let fill: String
         
         var id: String
     }
