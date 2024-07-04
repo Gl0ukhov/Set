@@ -25,6 +25,12 @@ struct SetModel {
         }
     }
     
+    init(testCard: Int) {
+        for i in 0..<testCard {
+            cards.append(Card(figure: "figure", cardColor: "color", numberOfSymbol: "number", cardTexture: "texture", id: String(i)))
+        }
+    }
+    
     struct Card: Identifiable {
         var isMatch = false
         let figure: String

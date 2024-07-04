@@ -45,20 +45,6 @@ struct Card: View {
         self.card = card
     }
     
-    var figure: String {
-        let figure = switch card.figure {
-        case "Circle":
-            "circle"
-        case "Capsule":
-            "capsule"
-        case "RoundedRectangle":
-            "rectangle"
-        default:
-            "questionmark.square.dashed"
-        }
-        return figure
-    }
-    
     var body: some View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: 10)
