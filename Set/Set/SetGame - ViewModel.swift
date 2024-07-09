@@ -9,31 +9,43 @@ import SwiftUI
 
 @Observable
 class SetGameViewModel {
-    private static let figure = ["Circle", "Capsule", "RoundedRectangle"]
-    private static let color = ["Red", "Green", "Blue"]
-    private static let number = ["One", "Two", "Three"]
-    private static let cardTexture = ["Fill", "Empty", "Shade"]
+    typealias Card = SetModel<CardContent>.Card
+    typealias Model = SetModel<CardContent>
     
-    var model: SetModel
-    
-    var count = 0
-    
+    private var model: Model
+        
     init() {
         model = SetGameViewModel.createSetGame()
     }
     
-    private static func createSetGame() -> SetModel {
-        SetModel(figures: figure, colors: color, numbers: number, textures: cardTexture)
-//        SetModel(testCard: 3)
+    private static func createSetGame() -> Model {
+        var cardsContent = [CardContent]()
         
+        for shape in CardContent.Shape.allCases {
+            for number in CardContent.Number.allCases {
+                for shading in CardContent.Shading.allCases {
+                    for color in CardContent.Color.allCases {
+                        let card = CardContent(shape: shape, number: number, shading: shading, color: color)
+                        cardsContent.append(card)
+                    }
+                }
+            }
+        }
+        return SetModel(cardsContent)
     }
     
     
-    var card: [SetModel.Card] {
+    var cards: [Card] {
         model.cards
     }
     
+    func newGame() {
+        model = SetGameViewModel.createSetGame()
+    }
     
+    func giveCards() {
+
+    }
     
 }
 
