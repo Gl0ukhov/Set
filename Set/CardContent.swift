@@ -6,36 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct CardContent {
     
-    enum Color: String, CaseIterable {
-        case Red
-        case Green
-        case Blue
-    }
-    enum Number: String, CaseIterable {
-        case one 
-        case two
-        case three
-    }
-    enum Shading: String, CaseIterable {
-        case Fill
-        case Empty
-        case Shade
-    }
-    enum Shape: String, CaseIterable {
+    enum Figure: String, CaseIterable {
         case Circle
         case Rectangle
         case Rhomb
     }
     
-    let shape: Shape
-    let number: Number
-    let shading: Shading
+    static let allNumber: [Int] = [1, 2, 3]
+    static let allShading: [Double] = [1, 0.5, 0]
+    static let allColor: [Color] = [.red, .green, .blue]
+    
+    
+    
+    let shape: Figure
+    let number: Int
+    let shading: Double
     let color: Color
     
-    init(shape: Shape, number: Number, shading: Shading, color: Color) {
+    init(shape: Figure, number: Int, shading: Double, color: Color) {
         self.shape = shape
         self.number = number
         self.shading = shading

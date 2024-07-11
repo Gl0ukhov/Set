@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SetGameView : View {
-    var viewModel: SetGameViewModel
+    let viewModel: SetGameViewModel
     
     var body: some View {
         VStack {
@@ -26,7 +26,7 @@ struct SetGameView : View {
     
     var cards: some View {
         AspectVGrid(viewModel.cards, aspectRatio: 2/3) { card in
-            Card(card: card)
+            Card(card: card, viewModel: viewModel)
                 .padding(3)
         }
     }
