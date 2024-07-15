@@ -10,19 +10,20 @@ import SwiftUI
 struct Card: View {
     
     let card: SetModel<CardContent>.Card
-    let viewModel: SetGameViewModel
     
-    init(card: SetModel<CardContent>.Card, viewModel: SetGameViewModel) {
+    init(card: SetModel<CardContent>.Card) {
         self.card = card
-        self.viewModel = viewModel
     }
     
     var body: some View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: 10)
             base.stroke(.black, lineWidth: 1.5)
-            viewModel.chooseFigure(card.contentCard.shape, number: card.contentCard.number)
-                
+                .overlay(
+                    figure(card.contentCard.shape, quantity: card.contentCard.number, color: card.contentCard.color, shading: card.contentCard.shading)
+                        .padding(5)
+                )
+            
         }
     }
     

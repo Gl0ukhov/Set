@@ -47,29 +47,6 @@ class SetGameViewModel {
 
     }
     
-    func chooseFigure(_ figure: CardContent.Figure, number: Int) -> some View {
-        VStack {
-            ForEach(0..<number, id: \.self) { _ in
-                switch figure {
-                case .Circle:
-                    self.fillAndStroke(shape: Circle())
-                case .Rectangle:
-                    Rectangle()
-                case .Rhomb:
-                    Rhomb()
-                }
-            }
-        }
-    }
-    
-    func fillAndStroke(shape: some Shape) -> some View {
-        ZStack {
-            shape.fill(.red)
-                .opacity(0)
-            shape.stroke(.red)
-        }
-    }
-    
 }
 
 

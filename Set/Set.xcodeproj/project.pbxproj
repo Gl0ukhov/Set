@@ -11,6 +11,7 @@
 		80DA05E22C3D141F002988C8 /* Rhomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DA05E12C3D141F002988C8 /* Rhomb.swift */; };
 		80DA05E62C3D20B2002988C8 /* CardContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DA05E52C3D20B2002988C8 /* CardContent.swift */; };
 		80F5F6292C3D408200FF7653 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F5F6282C3D408200FF7653 /* Card.swift */; };
+		80F5F62D2C4029BA00FF7653 /* Figure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F5F62C2C4029BA00FF7653 /* Figure.swift */; };
 		80FEF5D22C2B409A004F0029 /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FEF5D12C2B409A004F0029 /* SetApp.swift */; };
 		80FEF5D42C2B409A004F0029 /* SetGameView - View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FEF5D32C2B409A004F0029 /* SetGameView - View.swift */; };
 		80FEF5D62C2B409C004F0029 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80FEF5D52C2B409C004F0029 /* Assets.xcassets */; };
@@ -24,6 +25,7 @@
 		80DA05E12C3D141F002988C8 /* Rhomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rhomb.swift; sourceTree = SOURCE_ROOT; };
 		80DA05E52C3D20B2002988C8 /* CardContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContent.swift; sourceTree = SOURCE_ROOT; };
 		80F5F6282C3D408200FF7653 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = SOURCE_ROOT; };
+		80F5F62C2C4029BA00FF7653 /* Figure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Figure.swift; sourceTree = SOURCE_ROOT; };
 		80FEF5CE2C2B409A004F0029 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80FEF5D12C2B409A004F0029 /* SetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetApp.swift; sourceTree = "<group>"; };
 		80FEF5D32C2B409A004F0029 /* SetGameView - View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetGameView - View.swift"; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				80FEF5E12C2B4284004F0029 /* SetGame - ViewModel.swift */,
 				80DA05E52C3D20B2002988C8 /* CardContent.swift */,
 				80F5F6282C3D408200FF7653 /* Card.swift */,
+				80F5F62C2C4029BA00FF7653 /* Figure.swift */,
 				80734BAD2C356940001C1B84 /* UniversalVGrid.swift */,
 				80DA05E12C3D141F002988C8 /* Rhomb.swift */,
 				80FEF5D52C2B409C004F0029 /* Assets.xcassets */,
@@ -160,6 +163,7 @@
 				80734BAE2C356940001C1B84 /* UniversalVGrid.swift in Sources */,
 				80FEF5D22C2B409A004F0029 /* SetApp.swift in Sources */,
 				80FEF5E02C2B424A004F0029 /* Set - Model.swift in Sources */,
+				80F5F62D2C4029BA00FF7653 /* Figure.swift in Sources */,
 				80FEF5E22C2B4284004F0029 /* SetGame - ViewModel.swift in Sources */,
 				80DA05E62C3D20B2002988C8 /* CardContent.swift in Sources */,
 				80DA05E22C3D141F002988C8 /* Rhomb.swift in Sources */,

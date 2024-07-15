@@ -26,7 +26,7 @@ struct SetGameView : View {
     
     var cards: some View {
         AspectVGrid(viewModel.cards, aspectRatio: 2/3) { card in
-            Card(card: card, viewModel: viewModel)
+            Card(card: card)
                 .padding(3)
         }
     }
