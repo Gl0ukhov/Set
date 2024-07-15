@@ -17,9 +17,24 @@ struct SetModel<CardContent> {
             self.cards.append(Card(contentCard: content, id: cards.count + 1))
         }
     }
+    var selectedСards: [Int]? {
+        get { cards.indices.filter { index in
+            cards[index].selected
+        }}
+    }
+    
+    mutating func choose(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
+            if let numberOfSelectedCards = selectedСards {
+                if !cards[chosenIndex].selected && numberOfSelectedCards.count < 3 {
+                    cards[chosenIndex].selected = true
+                }
+            }
+        }
+    }
     
     struct Card: Identifiable {
-        var isMatch = false
+        var selected = false
         let contentCard: CardContent
         
         var id: Int

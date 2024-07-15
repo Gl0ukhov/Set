@@ -47,6 +47,10 @@ class SetGameViewModel {
 
     }
     
+    func choose(_ card: Card) {
+        model.choose(card)
+    }
+    
 }
 
 
