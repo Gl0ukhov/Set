@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SetModel<CardContent> {
+struct SetModel<CardContent> where CardContent: Hashable {
     private(set) var cards: [Card] = []
     
     init(_ contentCards: [CardContent]) {
@@ -25,17 +25,47 @@ struct SetModel<CardContent> {
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
-            if let numberOfSelectedCards = selectedСards {
-                if !cards[chosenIndex].selected && numberOfSelectedCards.count < 3 {
+            if let selectedCardsIndexes = selectedСards {
+                if !cards[chosenIndex].selected && selectedCardsIndexes.count < 3 {
                     cards[chosenIndex].selected = true
                 }
             }
         }
     }
     
-    struct Card: Identifiable {
+    mutating func match(_ cardsMatch: ([Card]) -> Bool) {
+        if let selectedCardsIndexes = selectedСards {
+            if selectedCardsIndexes.count == 3 {
+                var threeCards: [Card] = []
+                for i in selectedCardsIndexes {
+                    threeCards.append(cards[i])
+                }
+                if cardsMatch(threeCards) {
+                    for i in selectedCardsIndexes {
+                        cards[i].match = true
+                    }
+                } else {
+                    
+                }
+            }
+        }
+    }
+    
+    mutating func cancelSelection() {
+        if let numberOfSelectedCards = selectedСards {
+            if numberOfSelectedCards.count <= 2 {
+                for i in numberOfSelectedCards {
+                    cards[i].selected = false
+                }
+            }
+        }
+    }
+    
+    struct Card: Identifiable, Hashable {
         var selected = false
+        var match = false
         let contentCard: CardContent
+        
         
         var id: Int
     }

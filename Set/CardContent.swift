@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct CardContent {
+struct CardContent: Hashable {
     
     enum Figure: String, CaseIterable {
         case Circle

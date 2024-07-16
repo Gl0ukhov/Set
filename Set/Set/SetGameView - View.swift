@@ -11,17 +11,30 @@ struct SetGameView : View {
     let viewModel: SetGameViewModel
     
     var body: some View {
-        VStack {
-            header
-            cards
-            newGame
+        NavigationStack {
+            VStack {
+                header
+                cards
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        viewModel.cancelSelection()
+                    }
+                }
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("New game") {
+                        
+                    }
+                }
+            }
         }
     }
     
     var header: some View {
         Text("Set")
             .font(.title)
-            .padding()
     }
     
     var cards: some View {
@@ -30,14 +43,11 @@ struct SetGameView : View {
                 .padding(3)
                 .onTapGesture {
                     viewModel.choose(card)
+                    viewModel.test()
                 }
         }
     }
     
-    var newGame: some View {
-        Button("New game") {
-        }
-        .padding()    }
 }
 
 

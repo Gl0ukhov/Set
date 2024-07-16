@@ -13,7 +13,7 @@ class SetGameViewModel {
     typealias Model = SetModel<CardContent>
     
     private var model: Model
-        
+    
     init() {
         model = SetGameViewModel.createSetGame()
     }
@@ -44,12 +44,46 @@ class SetGameViewModel {
     }
     
     func giveCards() {
-
+        
     }
     
     func choose(_ card: Card) {
         model.choose(card)
     }
+    
+    func test() {
+        model.match { card in
+            var color: Set<Color> = []
+            var number: Set<Int> = []
+            var shading: Set<Double> = []
+            var shape: Set<String> = []
+            
+            for item in cards {
+                color.insert(item.contentCard.color)
+                number.insert(item.contentCard.number)
+                shading.insert(item.contentCard.shading)
+                shape.insert(item.contentCard.shape.rawValue)
+            }
+            
+            if color.count != 2 {
+                if number.count != 2 {
+                    if shading.count != 2 {
+                        if shape.count != 2 {
+                            return true
+                        }
+                    }
+                }
+            }
+            return false
+        }
+    }
+    
+    
+    func cancelSelection() {
+        model.cancelSelection()
+    }
+    
+    
     
 }
 
