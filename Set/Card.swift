@@ -21,11 +21,25 @@ struct Card: View {
             base.stroke(card.selected ? .yellow : .black, lineWidth: card.selected ? 2.5 : 1.5)
                 .overlay(
                     figure(card.contentCard.shape, quantity: card.contentCard.number, color: card.contentCard.color, shading: card.contentCard.shading)
-                    
-                       
                         .padding(5)
                 )
-            
+                .opacity(card.match != .nChecked ? 0 : 1)
+            base.stroke(.green)
+                .overlay(
+                    Image(systemName: "checkmark")
+                        .font(.title2)
+                        .bold()
+                        .foregroundStyle(.green)
+                )
+                .opacity(card.match == .correctly ? 1 : 0)
+            base.stroke(.red)
+                .overlay(
+                    Image(systemName: "xmark")
+                        .font(.title2)
+                        .bold()
+                        .foregroundStyle(.red)
+                )
+                .opacity((card.match == .wrong ? 1 : 0))
             
         }
     }

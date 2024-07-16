@@ -58,7 +58,7 @@ class SetGameViewModel {
             var shading: Set<Double> = []
             var shape: Set<String> = []
             
-            for item in cards {
+            for item in card {
                 color.insert(item.contentCard.color)
                 number.insert(item.contentCard.number)
                 shading.insert(item.contentCard.shading)
@@ -66,9 +66,13 @@ class SetGameViewModel {
             }
             
             if color.count != 2 {
+                print(color)
                 if number.count != 2 {
+                    print(number)
                     if shading.count != 2 {
+                        print(shading)
                         if shape.count != 2 {
+                            print(shape)
                             return true
                         }
                     }

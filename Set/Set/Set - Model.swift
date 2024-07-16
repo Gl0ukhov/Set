@@ -42,10 +42,12 @@ struct SetModel<CardContent> where CardContent: Hashable {
                 }
                 if cardsMatch(threeCards) {
                     for i in selectedCardsIndexes {
-                        cards[i].match = true
+                        cards[i].match = .correctly
                     }
                 } else {
-                    
+                    for i in selectedCardsIndexes {
+                        cards[i].match = .wrong
+                    }
                 }
             }
         }
@@ -63,10 +65,14 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     struct Card: Identifiable, Hashable {
         var selected = false
-        var match = false
+        var match = CardStatus.nChecked
         let contentCard: CardContent
         
         
         var id: Int
+        
+        enum CardStatus {
+            case correctly, wrong, nChecked
+        }
     }
 }
