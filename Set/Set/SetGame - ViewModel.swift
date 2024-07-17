@@ -36,8 +36,10 @@ class SetGameViewModel {
     
     
     var cards: [Card] {
-        model.cards
+        Array(model.cards[0..<12])
     }
+    
+    
     
     func newGame() {
         model = SetGameViewModel.createSetGame()
@@ -66,13 +68,9 @@ class SetGameViewModel {
             }
             
             if color.count != 2 {
-                print(color)
                 if number.count != 2 {
-                    print(number)
                     if shading.count != 2 {
-                        print(shading)
                         if shape.count != 2 {
-                            print(shape)
                             return true
                         }
                     }
