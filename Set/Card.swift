@@ -23,7 +23,8 @@ struct Card: View {
                     figure(card.contentCard.shape, quantity: card.contentCard.number, color: card.contentCard.color, shading: card.contentCard.shading)
                         .padding(5)
                 )
-                .opacity(card.match != .nChecked ? 0 : 1)
+                .opacity(card.match == .nChecked ? 1 : 0)
+            
             base.stroke(.green)
                 .overlay(
                     Image(systemName: "checkmark")
@@ -32,6 +33,7 @@ struct Card: View {
                         .foregroundStyle(.green)
                 )
                 .opacity(card.match == .correctly ? 1 : 0)
+            
             base.stroke(.red)
                 .overlay(
                     Image(systemName: "xmark")

@@ -49,18 +49,14 @@ class SetGameViewModel {
         
     }
     
-    func choose(_ card: Card) {
-        model.choose(card)
-    }
-    
-    func test() {
-        model.match { card in
+    func chooseAndCheckCard(_ card: Card) {
+        model.userSelected(card: card) { cards in
             var color: Set<Color> = []
             var number: Set<Int> = []
             var shading: Set<Double> = []
             var shape: Set<String> = []
             
-            for item in card {
+            for item in cards {
                 color.insert(item.contentCard.color)
                 number.insert(item.contentCard.number)
                 shading.insert(item.contentCard.shading)
@@ -79,11 +75,12 @@ class SetGameViewModel {
             return false
         }
     }
-    
+                           
     
     func cancelSelection() {
         model.cancelSelection()
     }
+    
     
     
     

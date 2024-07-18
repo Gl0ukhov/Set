@@ -42,8 +42,7 @@ struct SetGameView : View {
             Card(card: card)
                 .padding(3)
                 .onTapGesture {
-                    viewModel.choose(card)
-                    viewModel.test()
+                    viewModel.chooseAndCheckCard(card)
                 }
         }
     }

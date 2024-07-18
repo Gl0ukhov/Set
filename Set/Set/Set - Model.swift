@@ -17,7 +17,8 @@ struct SetModel<CardContent> where CardContent: Hashable {
             self.cards.append(Card(contentCard: content, id: cards.count + 1))
         }
     }
-    var selectedСards: [Int]? {
+    
+    var selectedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
             cards[index].selected
         }}
@@ -25,42 +26,68 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
-            if let selectedCardsIndexes = selectedСards {
-                if !cards[chosenIndex].selected && selectedCardsIndexes.count < 3 {
-                    cards[chosenIndex].selected = true
+            
+            let isSelected = cards[chosenIndex].selected
+            cards[chosenIndex].selected.toggle()
+            
+            if selectedCardsIndexes.count == 3 {
+                let selectedCards = selectedCardsIndexes.map { cards[$0] }
+                
+                if let matchStatus = checkMatch(for: selectedCards) {
+                    selectedIndexes.forEach { index in
+                        cards[index].match = matchStatus
+                    }
                 }
             }
         }
     }
     
-    mutating func match(_ cardsMatch: ([Card]) -> Bool) {
-        if let selectedCardsIndexes = selectedСards {
-            if selectedCardsIndexes.count == 3 {
-                var threeCards: [Card] = []
+    
+    mutating func checkMatch(for: ([Card]) -> Bool) {
+        if selectedCardsIndexes.count == 3 {
+            var threeCards: [Card] = []
+            for i in selectedCardsIndexes {
+                threeCards.append(cards[i])
+            }
+            if cardsMatch(threeCards) {
                 for i in selectedCardsIndexes {
-                    threeCards.append(cards[i])
+                    cards[i].match = .correctly
+                    print(i)
                 }
-                if cardsMatch(threeCards) {
-                    for i in selectedCardsIndexes {
-                        cards[i].match = .correctly
-                    }
-                } else {
-                    for i in selectedCardsIndexes {
-                        cards[i].match = .wrong
-                    }
+                
+            } else {
+                for i in selectedCardsIndexes {
+                    cards[i].match = .wrong
                 }
             }
         }
+        
+    }
+    
+    mutating func userSelected(card: Card, cardsMatch: ([Card]) -> Bool) {
+        choose(card)
+        if selectedCardsIndexes.count == 3 {
+            checkMatch(cardsMatch: cardsMatch)
+        }
+        if selectedCardsIndexes.count == 4 {
+            removeMatchedCards()
+        }
+    }
+    
+    mutating func removeMatchedCards() {
+        for i in selectedCardsIndexes {
+            cards.remove(at: i)
+        }
+        cancelSelection()
     }
     
     mutating func cancelSelection() {
-        if let numberOfSelectedCards = selectedСards {
-            if numberOfSelectedCards.count <= 2 {
-                for i in numberOfSelectedCards {
-                    cards[i].selected = false
-                }
+        if selectedCardsIndexes.count <= 2 {
+            for i in selectedCardsIndexes {
+                cards[i].selected = false
             }
         }
+        
     }
     
     struct Card: Identifiable, Hashable {
