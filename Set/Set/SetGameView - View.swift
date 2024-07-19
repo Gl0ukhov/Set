@@ -15,6 +15,7 @@ struct SetGameView : View {
             VStack {
                 header
                 cards
+                dealCards
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -37,12 +38,21 @@ struct SetGameView : View {
             .font(.title)
     }
     
+    var dealCards: some View {
+        Button("Give me 3 cards") {
+            viewModel.giveCards()
+        }
+        
+    }
+    
     var cards: some View {
         AspectVGrid(viewModel.cards, aspectRatio: 2/3) { card in
             Card(card: card)
                 .padding(3)
                 .onTapGesture {
-                    viewModel.chooseAndCheckCard(card)
+                    viewModel.chooseCard(card)
+                    viewModel.checkMatch()
+                    viewModel.remove()
                 }
         }
     }

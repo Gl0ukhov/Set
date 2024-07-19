@@ -18,32 +18,37 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }
     }
     
+    // Фильтр по картам, у которых свойство selected = true
     var selectedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
             cards[index].selected
         }}
     }
     
-    mutating func choose(_ card: Card) {
-        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
-            
-            let isSelected = cards[chosenIndex].selected
-            cards[chosenIndex].selected.toggle()
-            
-            if selectedCardsIndexes.count == 3 {
-                let selectedCards = selectedCardsIndexes.map { cards[$0] }
-                
-                if let matchStatus = checkMatch(for: selectedCards) {
-                    selectedIndexes.forEach { index in
-                        cards[index].match = matchStatus
-                    }
-                }
+    // Фильтр по картам, у которых свойство match != nChecked
+    var matchedCardsIndexes: [Int] {
+        get { cards.indices.filter { index in
+            cards[index].match != .nChecked
+        }}
+    }
+    
+    // Свойство selected, если выбрано меньше трех карточек сбрасывается
+    mutating func cancelSelection() {
+        if selectedCardsIndexes.count < 3 {
+            for index in selectedCardsIndexes {
+                cards[index].selected = false
             }
         }
     }
     
+    // Функция выбора карты и изменения selected свойства
+    mutating func choose(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
+            cards[chosenIndex].selected.toggle()
+        }
+    }
     
-    mutating func checkMatch(for: ([Card]) -> Bool) {
+    mutating func checkMatch(cardsMatch: ([Card]) -> Bool) {
         if selectedCardsIndexes.count == 3 {
             var threeCards: [Card] = []
             for i in selectedCardsIndexes {
@@ -52,42 +57,32 @@ struct SetModel<CardContent> where CardContent: Hashable {
             if cardsMatch(threeCards) {
                 for i in selectedCardsIndexes {
                     cards[i].match = .correctly
-                    print(i)
                 }
-                
             } else {
                 for i in selectedCardsIndexes {
                     cards[i].match = .wrong
                 }
             }
         }
-        
-    }
-    
-    mutating func userSelected(card: Card, cardsMatch: ([Card]) -> Bool) {
-        choose(card)
-        if selectedCardsIndexes.count == 3 {
-            checkMatch(cardsMatch: cardsMatch)
-        }
-        if selectedCardsIndexes.count == 4 {
-            removeMatchedCards()
-        }
     }
     
     mutating func removeMatchedCards() {
-        for i in selectedCardsIndexes {
-            cards.remove(at: i)
+        if selectedCardsIndexes.count == 4 {
+            let indexToRemove = matchedCardsIndexes.sorted(by: >)
+            for index in indexToRemove {
+                if cards[index].match == .correctly {
+                    cards.remove(at: index)
+                }
+            }
+//            clearSelection()
         }
-        cancelSelection()
     }
     
-    mutating func cancelSelection() {
-        if selectedCardsIndexes.count <= 2 {
-            for i in selectedCardsIndexes {
-                cards[i].selected = false
-            }
+    private mutating func clearSelection() {
+        for index in cards.indices {
+            cards[index].selected = false
+            cards[index].match = .nChecked
         }
-        
     }
     
     struct Card: Identifiable, Hashable {
@@ -101,5 +96,6 @@ struct SetModel<CardContent> where CardContent: Hashable {
         enum CardStatus {
             case correctly, wrong, nChecked
         }
+        
     }
 }

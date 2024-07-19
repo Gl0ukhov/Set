@@ -14,6 +14,8 @@ class SetGameViewModel {
     
     private var model: Model
     
+    var numberOfCards = 12
+    
     init() {
         model = SetGameViewModel.createSetGame()
     }
@@ -34,23 +36,30 @@ class SetGameViewModel {
         return SetModel(cardsContent)
     }
     
-    
-    var cards: [Card] {
-        Array(model.cards[0..<12])
+    var allCards: [Card] {
+        model.cards
     }
     
-    
+    var cards: [Card] {
+        Array(model.cards[0..<numberOfCards])
+    }
     
     func newGame() {
         model = SetGameViewModel.createSetGame()
     }
     
-    func giveCards() {
-        
+    func chooseCard(_ card: Card) {
+        model.choose(card)
     }
     
-    func chooseAndCheckCard(_ card: Card) {
-        model.userSelected(card: card) { cards in
+    func giveCards() {
+        if numberOfCards < allCards.count {
+            numberOfCards += 3
+        }
+    }
+    
+    func checkMatch() {
+        model.checkMatch { cards in
             var color: Set<Color> = []
             var number: Set<Int> = []
             var shading: Set<Double> = []
@@ -75,12 +84,15 @@ class SetGameViewModel {
             return false
         }
     }
+    
+    func remove() {
+        model.removeMatchedCards()
+    }
                            
     
     func cancelSelection() {
         model.cancelSelection()
     }
-    
     
     
     
