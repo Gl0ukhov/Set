@@ -17,12 +17,13 @@ struct Card: View {
     
     var body: some View {
         ZStack {
-            let base = RoundedRectangle(cornerRadius: 10)
-            base.stroke(card.selected ? .yellow : .black, lineWidth: card.selected ? 2.5 : 1.5)
+            let base = RoundedRectangle(cornerRadius: Constants.cornerRadius)
+            base.fill(.white).stroke(card.selected ? .yellow : .black, lineWidth: card.selected ? 2.5 : 1.5)
                 .overlay(
                     figure(card.contentCard.shape, quantity: card.contentCard.number, color: card.contentCard.color, shading: card.contentCard.shading)
-                        .padding(5)
+                        .padding(Constants.padding)
                 )
+                
                 .opacity(card.match == .nChecked ? 1 : 0)
             
             base.stroke(.green)
@@ -46,6 +47,12 @@ struct Card: View {
         }
     }
     
+    
+    
+    struct Constants {
+        static let cornerRadius: CGFloat = 10
+        static let padding: CGFloat = 5
+    }
 }
 
 

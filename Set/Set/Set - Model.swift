@@ -72,15 +72,40 @@ struct SetModel<CardContent> where CardContent: Hashable {
             for index in indexToRemove {
                 if cards[index].match == .correctly {
                     cards.remove(at: index)
+                    clearSelection()
+                    // Необходимо поправить, чтобы не вызывалось три раза 
+                } else {
+                    cards[index].selected = false
+                    clearMatch()
                 }
             }
-//            clearSelection()
+        }
+    }
+    
+    mutating func removeAtClick() {
+        if selectedCardsIndexes.count == 3 {
+            let indexToRemove = matchedCardsIndexes.sorted(by: >)
+            for index in indexToRemove {
+                if cards[index].match == .correctly {
+                    cards.remove(at: index)
+                    clearSelection()
+                    // Необходимо поправить, чтобы не вызывалось три раза
+                } else {
+                    cards[index].selected = false
+                    clearMatch()
+                }
+            }
         }
     }
     
     private mutating func clearSelection() {
         for index in cards.indices {
             cards[index].selected = false
+        }
+    }
+    
+    private mutating func clearMatch() {
+        for index in cards.indices {
             cards[index].match = .nChecked
         }
     }

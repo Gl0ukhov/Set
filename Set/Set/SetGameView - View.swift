@@ -10,13 +10,19 @@ import SwiftUI
 struct SetGameView : View {
     let viewModel: SetGameViewModel
     
+    private let aspectRatio: CGFloat = 2/3
+    private let paddingCard: CGFloat = 3
+    
     var body: some View {
         NavigationStack {
             VStack {
                 header
                 cards
-                dealCards
+                    .animation(.default, value: viewModel.cards)
+                button
             }
+            
+            .toolbarColorScheme(.dark)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -26,7 +32,7 @@ struct SetGameView : View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("New game") {
-                        
+                        viewModel.newGame()
                     }
                 }
             }
@@ -38,18 +44,21 @@ struct SetGameView : View {
             .font(.title)
     }
     
-    var dealCards: some View {
+    var button: some View {
         Button("Give me 3 cards") {
             viewModel.giveCards()
         }
+        .padding()
+        .disabled(viewModel.disableadButton)
         
     }
     
     var cards: some View {
-        AspectVGrid(viewModel.cards, aspectRatio: 2/3) { card in
+        UniversalVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
             Card(card: card)
-                .padding(3)
+                .padding(paddingCard)
                 .onTapGesture {
+                    // Объединить в одну функцию, не вызывая несколько раз функции 
                     viewModel.chooseCard(card)
                     viewModel.checkMatch()
                     viewModel.remove()

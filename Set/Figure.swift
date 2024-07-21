@@ -27,7 +27,7 @@ struct Figure: ViewModifier {
                     
                 }
             }
-            .aspectRatio(2/1, contentMode: .fit)
+            .aspectRatio(Constants.aspectRatio, contentMode: .fit)
         }
     }
     
@@ -37,6 +37,11 @@ struct Figure: ViewModifier {
                 .opacity(shading)
             shape.stroke(color)
         }
+    }
+    
+    
+    private struct Constants {
+        static let aspectRatio: CGFloat = 2/1
     }
 }
 
