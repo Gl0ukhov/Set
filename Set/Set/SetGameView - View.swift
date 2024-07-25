@@ -8,10 +8,19 @@
 import SwiftUI
 
 struct SetGameView : View {
+    typealias Cards = SetModel<CardContent>.Card
+    
     let viewModel: SetGameViewModel
     
     private let aspectRatio: CGFloat = 2/3
     private let paddingCard: CGFloat = 3
+    private let deckWidth: CGFloat = 40
+    
+    @State private var dumpStack = Set<Cards.ID>()
+    
+    private var discardedCards: [Cards] {
+        viewModel.cards.filter {  isDiscard($0) }
+    }
     
     var body: some View {
         NavigationStack {
@@ -19,7 +28,13 @@ struct SetGameView : View {
                 header
                 cards
                     .animation(.default, value: viewModel.cards)
-                button
+                
+                HStack(/*spacing: 0*/) {
+                    button
+                    Spacer()
+                    discard
+                }
+                .padding(20)
             }
             
             .toolbarColorScheme(.dark)
@@ -39,12 +54,12 @@ struct SetGameView : View {
         }
     }
     
-    var header: some View {
+    private var header: some View {
         Text("Set")
             .font(.title)
     }
     
-    var button: some View {
+    private var button: some View {
         Button("Give me 3 cards") {
             viewModel.giveCards()
         }
@@ -53,17 +68,34 @@ struct SetGameView : View {
         
     }
     
-    var cards: some View {
+    private var cards: some View {
         UniversalVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
-            Card(card: card)
-                .padding(paddingCard)
-                .onTapGesture {
-                    // Объединить в одну функцию, не вызывая несколько раз функции 
-                    viewModel.chooseCard(card)
-                    viewModel.checkMatch()
-                    viewModel.remove()
-                }
+            if !isDiscard(card) {
+                Card(card: card)
+                    .padding(paddingCard)
+                    .onTapGesture {
+                        viewModel.chooseCard(card)
+                        viewModel.checkMatch()
+                        viewModel.remove { index in
+                            dumpStack.insert(viewModel.cards[index].id)
+                            print("i")
+                        }
+                    }
+            }
         }
+    }
+    
+    private var discard: some View {
+        ZStack {
+            ForEach(discardedCards) { card in
+                Card(card: card)
+            }
+            .frame(width: 40, height: deckWidth / aspectRatio)
+        }
+    }
+    
+    private func isDiscard(_ card: Cards) -> Bool {
+        dumpStack.contains(card.id)
     }
     
 }

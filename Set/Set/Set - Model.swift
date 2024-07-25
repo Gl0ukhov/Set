@@ -10,23 +10,22 @@ import Foundation
 struct SetModel<CardContent> where CardContent: Hashable {
     private(set) var cards: [Card] = []
     
+    
     init(_ contentCards: [CardContent]) {
-        self.cards.removeAll()
-        
         for content in contentCards {
             self.cards.append(Card(contentCard: content, id: cards.count + 1))
         }
     }
     
     // Фильтр по картам, у которых свойство selected = true
-    var selectedCardsIndexes: [Int] {
+    private var selectedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
             cards[index].selected
         }}
     }
     
     // Фильтр по картам, у которых свойство match != nChecked
-    var matchedCardsIndexes: [Int] {
+    private var matchedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
             cards[index].match != .nChecked
         }}
@@ -48,6 +47,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }
     }
     
+    // Функция проверки карты на соответствие правилам
     mutating func checkMatch(cardsMatch: ([Card]) -> Bool) {
         if selectedCardsIndexes.count == 3 {
             var threeCards: [Card] = []
@@ -66,19 +66,22 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }
     }
     
-    mutating func removeMatchedCards() {
+    // Функция удаления совпавших карт
+    mutating func removeMatchedCards(_ indexCard: ([Int]) -> ()) {
         if selectedCardsIndexes.count == 4 {
-            let indexToRemove = matchedCardsIndexes.sorted(by: >)
-            for index in indexToRemove {
-                if cards[index].match == .correctly {
-                    cards.remove(at: index)
-                    clearSelection()
-                    // Необходимо поправить, чтобы не вызывалось три раза 
-                } else {
-                    cards[index].selected = false
-                    clearMatch()
-                }
-            }
+            let indexToDiscard = matchedCardsIndexes.sorted(by: >)
+            indexCard(indexToDiscard)
+//            for index in indexToRemove {
+//                if cards[index].match == .correctly {
+//                    indexCard(index)
+//                    clearSelection()
+//                    print("l")
+//                } else {
+//                    cards[index].selected = false
+//                    
+//                }
+//                clearMatch()
+//            }
         }
     }
     
@@ -89,7 +92,6 @@ struct SetModel<CardContent> where CardContent: Hashable {
                 if cards[index].match == .correctly {
                     cards.remove(at: index)
                     clearSelection()
-                    // Необходимо поправить, чтобы не вызывалось три раза
                 } else {
                     cards[index].selected = false
                     clearMatch()

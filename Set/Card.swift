@@ -49,7 +49,7 @@ struct Card: View {
     
     
     
-    struct Constants {
+    private struct Constants {
         static let cornerRadius: CGFloat = 10
         static let padding: CGFloat = 5
     }

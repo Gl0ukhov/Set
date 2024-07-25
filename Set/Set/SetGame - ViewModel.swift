@@ -14,7 +14,24 @@ class SetGameViewModel {
     
     private var model: Model
     
-    var numberOfCards = 12
+    private var numberOfCards = 12
+    
+    private var allCards: [Card] {
+        model.cards
+    }
+    
+    var cards: [Card] {
+        Array(model.cards[0..<numberOfCards])
+        
+    }
+    
+    var disableadButton: Bool {
+        if model.cards.count == numberOfCards {
+            return true
+        } else {
+            return false
+        }
+    }
     
     init() {
         model = SetGameViewModel.createSetGame()
@@ -33,24 +50,7 @@ class SetGameViewModel {
                 }
             }
         }
-        return SetModel(cardsContent.shuffled())
-    }
-    
-    var allCards: [Card] {
-        model.cards
-    }
-    
-    var cards: [Card] {
-        Array(model.cards[0..<numberOfCards])
-        
-    }
-    
-    var disableadButton: Bool {
-        if model.cards.count == numberOfCards {
-            return true
-        } else {
-            return false
-        }
+        return SetModel(cardsContent/*.shuffled()*/)
     }
     
     func newGame() {
@@ -96,8 +96,20 @@ class SetGameViewModel {
         }
     }
     
-    func remove() {
-        model.removeMatchedCards()
+    func remove(insert: ([Int]) -> Void) {
+        model.removeMatchedCards { cardsIndex in
+            for index in cardsIndex {
+                if allCards[index].match == .correctly {
+                    indexCard(index)
+                    clearSelection()
+                    print("l")
+                } else {
+                    allCards[index].selected = false
+                    
+                }
+                clearMatch()
+            }
+        }
         if numberOfCards > allCards.count {
             numberOfCards = allCards.count
         }
@@ -107,8 +119,6 @@ class SetGameViewModel {
     func cancelSelection() {
         model.cancelSelection()
     }
-    
-    
     
 }
 
