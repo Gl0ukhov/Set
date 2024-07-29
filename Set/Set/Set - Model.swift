@@ -71,17 +71,8 @@ struct SetModel<CardContent> where CardContent: Hashable {
         if selectedCardsIndexes.count == 4 {
             let indexToDiscard = matchedCardsIndexes.sorted(by: >)
             indexCard(indexToDiscard)
-//            for index in indexToRemove {
-//                if cards[index].match == .correctly {
-//                    indexCard(index)
-//                    clearSelection()
-//                    print("l")
-//                } else {
-//                    cards[index].selected = false
-//                    
-//                }
-//                clearMatch()
-//            }
+            clearSelection()
+            clearMatch()
         }
     }
     

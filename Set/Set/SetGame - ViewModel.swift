@@ -16,15 +16,18 @@ class SetGameViewModel {
     
     private var numberOfCards = 12
     
-    private var allCards: [Card] {
+    // Переменная, которая возвращает все карты
+    var allCards: [Card] {
         model.cards
     }
     
+    // Переменная, которая возвращает начальные карты
     var cards: [Card] {
         Array(model.cards[0..<numberOfCards])
         
     }
     
+    // Переменная, которая возвращает true, когда карт нет в колоде
     var disableadButton: Bool {
         if model.cards.count == numberOfCards {
             return true
@@ -62,6 +65,7 @@ class SetGameViewModel {
         model.choose(card)
     }
     
+    // Функция выдачи трех карт 
     func giveCards() {
         if numberOfCards < allCards.count {
             numberOfCards += 3
@@ -95,19 +99,16 @@ class SetGameViewModel {
             return false
         }
     }
-    
-    func remove(insert: ([Int]) -> Void) {
+   
+    // Функция, которая добавляет карты в сброс
+    func remove(insert: ([Card]) -> Void) {
         model.removeMatchedCards { cardsIndex in
+            var indexCard = [Card]()
             for index in cardsIndex {
                 if allCards[index].match == .correctly {
-                    indexCard(index)
-                    clearSelection()
-                    print("l")
-                } else {
-                    allCards[index].selected = false
-                    
+                    indexCard.append(allCards[index])
                 }
-                clearMatch()
+                insert(indexCard)
             }
         }
         if numberOfCards > allCards.count {
