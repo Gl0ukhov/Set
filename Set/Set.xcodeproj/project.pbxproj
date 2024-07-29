@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		80734BAE2C356940001C1B84 /* UniversalVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80734BAD2C356940001C1B84 /* UniversalVGrid.swift */; };
+		808A55092C57B38C00A405A9 /* EmptyDiscardDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808A55082C57B38C00A405A9 /* EmptyDiscardDeck.swift */; };
 		80DA05E22C3D141F002988C8 /* Rhomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DA05E12C3D141F002988C8 /* Rhomb.swift */; };
 		80DA05E62C3D20B2002988C8 /* CardContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DA05E52C3D20B2002988C8 /* CardContent.swift */; };
 		80F5F6292C3D408200FF7653 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F5F6282C3D408200FF7653 /* Card.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		80734BAD2C356940001C1B84 /* UniversalVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalVGrid.swift; sourceTree = "<group>"; };
+		808A55082C57B38C00A405A9 /* EmptyDiscardDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyDiscardDeck.swift; sourceTree = SOURCE_ROOT; };
 		80DA05E12C3D141F002988C8 /* Rhomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rhomb.swift; sourceTree = SOURCE_ROOT; };
 		80DA05E52C3D20B2002988C8 /* CardContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContent.swift; sourceTree = SOURCE_ROOT; };
 		80F5F6282C3D408200FF7653 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = SOURCE_ROOT; };
@@ -71,6 +73,7 @@
 				80FEF5E12C2B4284004F0029 /* SetGame - ViewModel.swift */,
 				80DA05E52C3D20B2002988C8 /* CardContent.swift */,
 				80F5F6282C3D408200FF7653 /* Card.swift */,
+				808A55082C57B38C00A405A9 /* EmptyDiscardDeck.swift */,
 				80F5F62C2C4029BA00FF7653 /* Figure.swift */,
 				80734BAD2C356940001C1B84 /* UniversalVGrid.swift */,
 				80DA05E12C3D141F002988C8 /* Rhomb.swift */,
@@ -167,6 +170,7 @@
 				80FEF5E22C2B4284004F0029 /* SetGame - ViewModel.swift in Sources */,
 				80DA05E62C3D20B2002988C8 /* CardContent.swift in Sources */,
 				80DA05E22C3D141F002988C8 /* Rhomb.swift in Sources */,
+				808A55092C57B38C00A405A9 /* EmptyDiscardDeck.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

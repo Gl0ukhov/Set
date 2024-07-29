@@ -26,6 +26,16 @@ struct Card: View {
                 
                 .opacity(card.match == .nChecked ? 1 : 0)
             
+            base.fill(.gray).stroke(.black, lineWidth: 1.5)
+                .overlay(
+                    Image(systemName: "questionmark")
+                        .font(.system(.largeTitle))
+                        .bold()
+                        .foregroundStyle(.white)
+                )
+                .opacity(card.cardOpen ? 1 : 0)
+            
+            
             base.stroke(.green)
                 .overlay(
                     Image(systemName: "checkmark")
@@ -56,4 +66,6 @@ struct Card: View {
 }
 
 
-
+#Preview {
+    Card(card: SetModel<CardContent>.Card(contentCard: CardContent(shape: .Circle, number: 1, shading: 1, color: .red), cardOpen:  true, id: 1001))
+}

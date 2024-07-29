@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SetGameView : View {
-    @Namespace private var dealiingNamespace
+    @Namespace private var cardResetNamespace
     
     typealias Cards = SetModel<CardContent>.Card
     
@@ -23,18 +23,25 @@ struct SetGameView : View {
     // Набор удаленных карт
     @State private var dumpStack = Set<Cards.ID>()
     
+    // Набор карт на экране
+    @State private var openCard = Set<Cards.ID>()
+    
     // Фильтр для выдачи удаленных карт
     private var discardedCards: [Cards] {
         viewModel.cards.filter {  isDiscard($0) }
     }
+    
+    // Набор открытых карт
+    private var openedCard: [Cards] {
+        viewModel.cards.filter { isOpen($0) }
+    }
+    
     
     var body: some View {
         NavigationStack {
             VStack {
                 header
                 cards
-                    .animation(.default, value: viewModel.cards)
-                
                 HStack {
                     deck
                     Spacer()
@@ -42,7 +49,12 @@ struct SetGameView : View {
                 }
                 .padding(20)
             }
-            
+            .onAppear(perform: {
+                for card in viewModel.cards {
+                    if card.cardOpen {
+                        openCard.insert(card.id)}
+                }
+            })
             .toolbarColorScheme(.dark)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -64,21 +76,14 @@ struct SetGameView : View {
         Text("Set")
             .font(.title)
     }
-    
-//    private var button: some View {
-//        Button("Give me 3 cards") {
-//            viewModel.giveCards()
-//        }
-//        .padding()
-//        .disabled(viewModel.disableadButton)
-//    }
+
     
     // Отображение карт на главном экране
     private var cards: some View {
         UniversalVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
-            if !isDiscard(card) {
+            if !isDiscard(card) && !isOpen(card) {
                 Card(card: card)
-                    .matchedGeometryEffect(id: card.id, in: dealiingNamespace)
+                    .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
                     .padding(paddingCard)
                     .onTapGesture {
@@ -101,37 +106,46 @@ struct SetGameView : View {
     // Отображение сброшенных карт
     private var discard: some View {
         ZStack {
-            ForEach(discardedCards) { card in
+            if discardedCards.count == 0 {
+                EmptyDiscardDeck()
+            } else {
+                ForEach(discardedCards) { card in
+                    Card(card: card)
+                        .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
+                        .transition(.asymmetric(insertion: .identity, removal: .identity))
+                }
+            }
+        }
+        .frame(width: 40, height: deckWidth / aspectRatio)
+    }
+    
+    // Отображение колоды карт
+    private var deck: some View {
+        ZStack {
+            ForEach(viewModel.cards) { card in
                 Card(card: card)
-                    .matchedGeometryEffect(id: card.id, in: dealiingNamespace)
-                    .transition(.asymmetric(insertion: .identity, removal: .identity))
             }
             .frame(width: 40, height: deckWidth / aspectRatio)
             .disabled(viewModel.disableadButton)
-        }
-    }
-    
-    private var deck: some View {
-        ZStack {
-            ForEach(viewModel.allCards) { card in
-                Card(card: card)
-//                    .matchedGeometryEffect(id: card.id, in: dealiingNamespace)
-                    .transition(.asymmetric(insertion: .identity, removal: .identity))
-//                    
-            }
-            .frame(width: 40, height: deckWidth / aspectRatio)
             .onTapGesture {
-                withAnimation {
-                    viewModel.giveCards()
+                withAnimation() {
                 }
             }
         }
     }
     
+    // Проверка сброшена ли карта
     private func isDiscard(_ card: Cards) -> Bool {
         dumpStack.contains(card.id)
     }
     
+    // Проверка открыта ли карта
+    private func isOpen(_ card: Cards) -> Bool {
+        print(card)
+
+       return openCard.contains(card.id)
+    }
+ 
 }
 
 

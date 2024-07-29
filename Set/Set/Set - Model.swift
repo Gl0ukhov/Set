@@ -13,7 +13,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     init(_ contentCards: [CardContent]) {
         for content in contentCards {
-            self.cards.append(Card(contentCard: content, id: cards.count + 1))
+            self.cards.append(Card(contentCard: content, cardOpen: cards.count < 13 ? true : false, id: cards.count + 1))
         }
     }
     
@@ -107,7 +107,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
         var selected = false
         var match = CardStatus.nChecked
         let contentCard: CardContent
-        
+        var cardOpen = true
         
         var id: Int
         

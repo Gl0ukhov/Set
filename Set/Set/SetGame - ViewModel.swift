@@ -17,14 +17,8 @@ class SetGameViewModel {
     private var numberOfCards = 12
     
     // Переменная, которая возвращает все карты
-    var allCards: [Card] {
-        model.cards
-    }
-    
-    // Переменная, которая возвращает начальные карты
     var cards: [Card] {
-        Array(model.cards[0..<numberOfCards])
-        
+        model.cards
     }
     
     // Переменная, которая возвращает true, когда карт нет в колоде
@@ -67,7 +61,7 @@ class SetGameViewModel {
     
     // Функция выдачи трех карт 
     func giveCards() {
-        if numberOfCards < allCards.count {
+        if numberOfCards < cards.count {
             numberOfCards += 3
             model.removeAtClick()
         }
@@ -105,14 +99,14 @@ class SetGameViewModel {
         model.removeMatchedCards { cardsIndex in
             var indexCard = [Card]()
             for index in cardsIndex {
-                if allCards[index].match == .correctly {
-                    indexCard.append(allCards[index])
+                if cards[index].match == .correctly {
+                    indexCard.append(cards[index])
                 }
                 insert(indexCard)
             }
         }
-        if numberOfCards > allCards.count {
-            numberOfCards = allCards.count
+        if numberOfCards > cards.count {
+            numberOfCards = cards.count
         }
     }
     
