@@ -10,9 +10,11 @@ import SwiftUI
 struct Card: View {
     
     let card: SetModel<CardContent>.Card
+    var rotation: Double
     
-    init(card: SetModel<CardContent>.Card) {
+    init(card: SetModel<CardContent>.Card, rotation: Double = 180) {
         self.card = card
+        self.rotation = rotation
     }
     
     var body: some View {
@@ -33,8 +35,7 @@ struct Card: View {
                         .bold()
                         .foregroundStyle(.white)
                 )
-                .opacity(card.cardOpen ? 1 : 0)
-            
+                .opacity(rotation < 90 ? 1 : 0 )
             
             base.stroke(.green)
                 .overlay(
@@ -67,5 +68,5 @@ struct Card: View {
 
 
 #Preview {
-    Card(card: SetModel<CardContent>.Card(contentCard: CardContent(shape: .Circle, number: 1, shading: 1, color: .red), cardOpen:  true, id: 1001))
+    Card(card: SetModel<CardContent>.Card(contentCard: CardContent(shape: .Circle, number: 1, shading: 1, color: .red), id: 1001))
 }

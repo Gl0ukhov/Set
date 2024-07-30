@@ -21,6 +21,10 @@ class SetGameViewModel {
         model.cards
     }
     
+    var startCards: [Card] {
+        Array(model.cards[0..<numberOfCards])
+    }
+    
     // Переменная, которая возвращает true, когда карт нет в колоде
     var disableadButton: Bool {
         if model.cards.count == numberOfCards {
@@ -60,11 +64,23 @@ class SetGameViewModel {
     }
     
     // Функция выдачи трех карт 
-    func giveCards() {
+    func giveCards(insert: ([Card]) -> ()) {
+        var card = [Card]()
         if numberOfCards < cards.count {
             numberOfCards += 3
+            for i in (numberOfCards - 3)..<numberOfCards {
+                card.append(cards[i])
+            }
+            // MARK: Доделать - проблемы с анимацией
             model.removeAtClick()
         }
+        
+        insert(card)
+        
+    }
+    
+    func startGame(insert: ([Card]) -> () ) {
+        insert(startCards)
     }
     
     func checkMatch() {
@@ -101,13 +117,14 @@ class SetGameViewModel {
             for index in cardsIndex {
                 if cards[index].match == .correctly {
                     indexCard.append(cards[index])
+//                    numberOfCards -= 1
+                    // MARK: Необходимо поправить адаптивность таблицы, при сбросе карт
                 }
                 insert(indexCard)
+                
             }
         }
-        if numberOfCards > cards.count {
-            numberOfCards = cards.count
-        }
+        
     }
     
     

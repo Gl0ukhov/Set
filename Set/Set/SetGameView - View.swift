@@ -36,6 +36,8 @@ struct SetGameView : View {
         viewModel.cards.filter { isOpen($0) }
     }
     
+    @State private var rotatingCardID: Cards.ID?
+    
     
     var body: some View {
         NavigationStack {
@@ -50,9 +52,11 @@ struct SetGameView : View {
                 .padding(20)
             }
             .onAppear(perform: {
-                for card in viewModel.cards {
-                    if card.cardOpen {
-                        openCard.insert(card.id)}
+                viewModel.startGame { startCards in
+                    for card in startCards {
+                        openCard.insert(card.id)
+                        
+                    }
                 }
             })
             .toolbarColorScheme(.dark)
@@ -76,12 +80,12 @@ struct SetGameView : View {
         Text("Set")
             .font(.title)
     }
-
+    
     
     // Отображение карт на главном экране
     private var cards: some View {
-        UniversalVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
-            if !isDiscard(card) && !isOpen(card) {
+        UniversalVGrid(viewModel.startCards, aspectRatio: aspectRatio) { card in
+            if !isDiscard(card) && isOpen(card) {
                 Card(card: card)
                     .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
@@ -98,9 +102,11 @@ struct SetGameView : View {
                                 delay += dealInterval
                             }
                         }
+                        
                     }
             }
         }
+        .animation(.default, value: viewModel.startCards)
     }
     
     // Отображение сброшенных карт
@@ -123,12 +129,24 @@ struct SetGameView : View {
     private var deck: some View {
         ZStack {
             ForEach(viewModel.cards) { card in
-                Card(card: card)
+                if !isOpen(card) {
+                    Card(card: card, rotation: 0)
+                        .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
+                        .transition(.asymmetric(insertion: .identity, removal: .identity))
+                }
             }
-            .frame(width: 40, height: deckWidth / aspectRatio)
-            .disabled(viewModel.disableadButton)
-            .onTapGesture {
-                withAnimation() {
+        }
+        .frame(width: 40, height: deckWidth / aspectRatio)
+        .opacity(viewModel.disableadButton ? 0 : 1)
+        .animation(.smooth, value: viewModel.disableadButton)
+        .onTapGesture {
+            viewModel.giveCards { cardOpen in
+                var delay: TimeInterval = 0
+                for card in cardOpen {
+                    withAnimation(dealAnimation.delay(delay)) {
+                        let _ = openCard.insert(card.id)
+                    }
+                    delay += dealInterval
                 }
             }
         }
@@ -141,11 +159,8 @@ struct SetGameView : View {
     
     // Проверка открыта ли карта
     private func isOpen(_ card: Cards) -> Bool {
-        print(card)
-
-       return openCard.contains(card.id)
+        openCard.contains(card.id)
     }
- 
 }
 
 
