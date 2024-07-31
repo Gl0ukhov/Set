@@ -10,11 +10,11 @@ import SwiftUI
 struct Card: View {
     
     let card: SetModel<CardContent>.Card
-    var rotation: Double
+    var faceDown: Double = 0
     
-    init(card: SetModel<CardContent>.Card, rotation: Double = 180) {
+    init(card: SetModel<CardContent>.Card, faceDown: Double = 0) {
         self.card = card
-        self.rotation = rotation
+        self.faceDown = faceDown
     }
     
     var body: some View {
@@ -35,7 +35,8 @@ struct Card: View {
                         .bold()
                         .foregroundStyle(.white)
                 )
-                .opacity(rotation < 90 ? 1 : 0 )
+                .opacity(faceDown)
+                .animation(.default, value: faceDown)
             
             base.stroke(.green)
                 .overlay(

@@ -22,7 +22,7 @@ class SetGameViewModel {
         model.cards
     }
     
-    // Переменная, которая содержит начальные карты
+    // Переменная, которая открытые карты
     var startCards: [Card] {
         Array(model.cards[0..<numberOfCards])
     }
@@ -67,29 +67,25 @@ class SetGameViewModel {
     }
     
     // Функция выдачи трех карт 
-    func giveCards(insert: ([Card]) -> Void) {
+    func giveCards(insert: ([Card]) -> Void, remove: ([Card]) -> Void) {
         var card = [Card]()
         if numberOfCards < cards.count {
             numberOfCards += 3
             for i in (numberOfCards - 3)..<numberOfCards {
                 card.append(cards[i])
             }
+            insert(card)
             // MARK: Доделать - проблемы с анимацией
-            model.removeAtClick {  cardsIndex in
+            model.removeAtClick { cardsIndex in
                 var indexCard = [Card]()
                 for index in cardsIndex {
                     if cards[index].match == .correctly {
                         indexCard.append(cards[index])
-    //                    numberOfCards -= 1
-                        // MARK: Необходимо поправить адаптивность таблицы, при сбросе карт
                     }
-                    insert(indexCard)
+                    remove(indexCard)
                 }
             }
         }
-        
-        insert(card)
-        
     }
     
     // Функция добавления начальных карт
@@ -132,12 +128,10 @@ class SetGameViewModel {
             for index in cardsIndex {
                 if cards[index].match == .correctly {
                     indexCard.append(cards[index])
-//                    numberOfCards -= 1
-                    // MARK: Необходимо поправить адаптивность таблицы, при сбросе карт
+                    
                 }
-                insert(indexCard)
-                
             }
+            insert(indexCard)
         }
         
     }

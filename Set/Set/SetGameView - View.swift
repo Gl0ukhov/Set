@@ -81,7 +81,7 @@ struct SetGameView : View {
     
     // Отображение карт в центре экрана
     private var cards: some View {
-        UniversalVGrid(viewModel.startCards, aspectRatio: aspectRatio) { card in
+        UniversalVGrid(openedCard, aspectRatio: aspectRatio) { card in
             if !isDiscard(card) && isOpen(card) {
                 Card(card: card)
                     .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
@@ -127,18 +127,18 @@ struct SetGameView : View {
         ZStack {
             ForEach(viewModel.cards) { card in
                 if !isOpen(card) {
-                    Card(card: card, rotation: 0)
+                    Card(card: card, faceDown: 1)
                         .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                         .transition(.asymmetric(insertion: .identity, removal: .identity))
                 }
             }
         }
-        // MARK: Добавить смещение для карт 
+        // MARK: Добавить смещение для карт
         .frame(width: 40, height: deckWidth / aspectRatio)
         .opacity(viewModel.disableadButton ? 0 : 1)
         .animation(.smooth, value: viewModel.disableadButton)
         .onTapGesture {
-            viewModel.giveCards { cardOpen in
+            viewModel.giveCards(insert: {  cardOpen in
                 var delay: TimeInterval = 0
                 for card in cardOpen {
                     withAnimation(dealAnimation.delay(delay)) {
@@ -146,8 +146,15 @@ struct SetGameView : View {
                     }
                     delay += dealInterval
                 }
-            }
-            
+            }, remove: { cardRemove in
+                var delay: TimeInterval = 0
+                for card in cardRemove {
+                    withAnimation(dealAnimation.delay(delay)) {
+                        let _ = dumpStack.insert(card.id)
+                    }
+                    delay += dealInterval
+                }
+            })
         }
     }
     
