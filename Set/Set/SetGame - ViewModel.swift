@@ -14,30 +14,30 @@ class SetGameViewModel {
     
     private var model: Model
     
+    // Переменная, которая содержит количество начальных карт
     private var numberOfCards = 12
     
-    // Переменная, которая возвращает все карты
+    // Переменная, которая содержит все карты
     var cards: [Card] {
         model.cards
     }
     
+    // Переменная, которая содержит начальные карты
     var startCards: [Card] {
         Array(model.cards[0..<numberOfCards])
     }
     
-    // Переменная, которая возвращает true, когда карт нет в колоде
+    // Переменная, которая проверяет остаток в колоде
     var disableadButton: Bool {
-        if model.cards.count == numberOfCards {
-            return true
-        } else {
-            return false
-        }
+        model.cards.count == numberOfCards ? true : false
     }
     
+    // Инициализация модели
     init() {
         model = SetGameViewModel.createSetGame()
     }
     
+    // Функция создания новой игры, добавление карт
     private static func createSetGame() -> Model {
         var cardsContent = [CardContent]()
         
@@ -54,17 +54,20 @@ class SetGameViewModel {
         return SetModel(cardsContent/*.shuffled()*/)
     }
     
-    func newGame() {
+    // Функция начала новой игры
+    func newGame(insertCards: ([Card]) -> Void){
         model = SetGameViewModel.createSetGame()
         numberOfCards = 12
+        startGame(insert: insertCards)
     }
     
+    // Функция выбора карты
     func chooseCard(_ card: Card) {
         model.choose(card)
     }
     
     // Функция выдачи трех карт 
-    func giveCards(insert: ([Card]) -> ()) {
+    func giveCards(insert: ([Card]) -> Void) {
         var card = [Card]()
         if numberOfCards < cards.count {
             numberOfCards += 3
@@ -72,17 +75,29 @@ class SetGameViewModel {
                 card.append(cards[i])
             }
             // MARK: Доделать - проблемы с анимацией
-            model.removeAtClick()
+            model.removeAtClick {  cardsIndex in
+                var indexCard = [Card]()
+                for index in cardsIndex {
+                    if cards[index].match == .correctly {
+                        indexCard.append(cards[index])
+    //                    numberOfCards -= 1
+                        // MARK: Необходимо поправить адаптивность таблицы, при сбросе карт
+                    }
+                    insert(indexCard)
+                }
+            }
         }
         
         insert(card)
         
     }
     
-    func startGame(insert: ([Card]) -> () ) {
+    // Функция добавления начальных карт
+    func startGame(insert: ([Card]) -> Void ) {
         insert(startCards)
     }
     
+    // Функция проверки совпадения карт
     func checkMatch() {
         model.checkMatch { cards in
             var color: Set<Color> = []
@@ -127,7 +142,7 @@ class SetGameViewModel {
         
     }
     
-    
+    // Функция, которая сбрасывает выбор карт
     func cancelSelection() {
         model.cancelSelection()
     }

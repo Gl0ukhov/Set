@@ -13,7 +13,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     init(_ contentCards: [CardContent]) {
         for content in contentCards {
-            self.cards.append(Card(contentCard: content, id: cards.count + 1))
+            self.cards.append(Card(contentCard: content/*, id: cards.count + 1*/))
         }
     }
     
@@ -67,7 +67,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
     }
     
     // Функция удаления совпавших карт
-    mutating func removeMatchedCards(_ indexCard: ([Int]) -> ()) {
+    mutating func removeMatchedCards(_ indexCard: ([Int]) -> Void) {
         if selectedCardsIndexes.count == 4 {
             let indexToDiscard = matchedCardsIndexes.sorted(by: >)
             indexCard(indexToDiscard)
@@ -76,18 +76,22 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }
     }
     
-    mutating func removeAtClick() {
+    mutating func removeAtClick(_ indexCard: ([Int]) -> Void) {
         if selectedCardsIndexes.count == 3 {
-            let indexToRemove = matchedCardsIndexes.sorted(by: >)
-            for index in indexToRemove {
-                if cards[index].match == .correctly {
-                    cards.remove(at: index)
-                    clearSelection()
-                } else {
-                    cards[index].selected = false
-                    clearMatch()
-                }
-            }
+            let indexToDiscard = matchedCardsIndexes.sorted(by: >)
+            indexCard(indexToDiscard)
+            clearSelection()
+            clearMatch()
+            
+//            for index in indexToRemove {
+//                if cards[index].match == .correctly {
+//                    cards.remove(at: index)
+//                    clearSelection()
+//                } else {
+//                    cards[index].selected = false
+//                    clearMatch()
+//                }
+//            }
         }
     }
     
@@ -108,7 +112,7 @@ struct SetModel<CardContent> where CardContent: Hashable {
         var match = CardStatus.nChecked
         let contentCard: CardContent
         
-        var id: Int
+        var id = UUID()
         
         enum CardStatus {
             case correctly, wrong, nChecked

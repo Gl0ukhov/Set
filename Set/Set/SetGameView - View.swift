@@ -20,23 +20,21 @@ struct SetGameView : View {
     private let dealAnimation: Animation = .easeOut(duration: 1)
     private let dealInterval: TimeInterval = 0.1
     
-    // Набор удаленных карт
+    // Набор сброшенных карт
     @State private var dumpStack = Set<Cards.ID>()
     
-    // Набор карт на экране
+    // Набор открытых карт
     @State private var openCard = Set<Cards.ID>()
     
-    // Фильтр для выдачи удаленных карт
+    // Массив сброшенных карт
     private var discardedCards: [Cards] {
         viewModel.cards.filter {  isDiscard($0) }
     }
     
-    // Набор открытых карт
+    // Массив открытых карт
     private var openedCard: [Cards] {
         viewModel.cards.filter { isOpen($0) }
     }
-    
-    @State private var rotatingCardID: Cards.ID?
     
     
     var body: some View {
@@ -53,10 +51,7 @@ struct SetGameView : View {
             }
             .onAppear(perform: {
                 viewModel.startGame { startCards in
-                    for card in startCards {
-                        openCard.insert(card.id)
-                        
-                    }
+                    startCards.forEach { openCard.insert($0.id)}
                 }
             })
             .toolbarColorScheme(.dark)
@@ -69,20 +64,22 @@ struct SetGameView : View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("New game") {
-                        viewModel.newGame()
+                        viewModel.newGame {  startCards in
+                            startCards.forEach { openCard.insert($0.id)}
+                        }
                     }
                 }
             }
         }
     }
     
+    // Название игры
     private var header: some View {
         Text("Set")
             .font(.title)
     }
     
-    
-    // Отображение карт на главном экране
+    // Отображение карт в центре экрана
     private var cards: some View {
         UniversalVGrid(viewModel.startCards, aspectRatio: aspectRatio) { card in
             if !isDiscard(card) && isOpen(card) {
@@ -136,6 +133,7 @@ struct SetGameView : View {
                 }
             }
         }
+        // MARK: Добавить смещение для карт 
         .frame(width: 40, height: deckWidth / aspectRatio)
         .opacity(viewModel.disableadButton ? 0 : 1)
         .animation(.smooth, value: viewModel.disableadButton)
@@ -149,6 +147,7 @@ struct SetGameView : View {
                     delay += dealInterval
                 }
             }
+            
         }
     }
     

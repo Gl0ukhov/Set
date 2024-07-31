@@ -68,5 +68,5 @@ struct Card: View {
 
 
 #Preview {
-    Card(card: SetModel<CardContent>.Card(contentCard: CardContent(shape: .Circle, number: 1, shading: 1, color: .red), id: 1001))
+    Card(card: SetModel<CardContent>.Card(contentCard: CardContent(shape: .Circle, number: 1, shading: 1, color: .red)))
 }
