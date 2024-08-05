@@ -10,9 +10,6 @@ import SwiftUI
 struct UniversalVGrid<Item: Identifiable, ItemView: View>: View {
     var items: [Item]
     
-    var countItems: Int {
-        return items.count
-    }
     var aspectRatio: CGFloat = 1
     var content: (Item) -> ItemView
     

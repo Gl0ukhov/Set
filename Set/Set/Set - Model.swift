@@ -8,12 +8,13 @@
 import Foundation
 
 struct SetModel<CardContent> where CardContent: Hashable {
+    // Массив карточек
     private(set) var cards: [Card] = []
     
-    
+    // Создание карточек
     init(_ contentCards: [CardContent]) {
         for content in contentCards {
-            self.cards.append(Card(contentCard: content/*, id: cards.count + 1*/))
+            self.cards.append(Card(contentCard: content))
         }
     }
     
@@ -24,20 +25,13 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }}
     }
     
+    
+    
     // Фильтр по картам, у которых свойство match != nChecked
     private var matchedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
             cards[index].match != .nChecked
         }}
-    }
-    
-    // Свойство selected, если выбрано меньше трех карточек сбрасывается
-    mutating func cancelSelection() {
-        if selectedCardsIndexes.count < 3 {
-            for index in selectedCardsIndexes {
-                cards[index].selected = false
-            }
-        }
     }
     
     // Функция выбора карты и изменения selected свойства
@@ -82,16 +76,6 @@ struct SetModel<CardContent> where CardContent: Hashable {
             indexCard(indexToDiscard)
             clearSelection()
             clearMatch()
-            
-//            for index in indexToRemove {
-//                if cards[index].match == .correctly {
-//                    cards.remove(at: index)
-//                    clearSelection()
-//                } else {
-//                    cards[index].selected = false
-//                    clearMatch()
-//                }
-//            }
         }
     }
     
@@ -105,6 +89,11 @@ struct SetModel<CardContent> where CardContent: Hashable {
         for index in cards.indices {
             cards[index].match = .nChecked
         }
+    }
+    
+    
+    mutating func shuffleCard() {
+        cards.shuffle()
     }
     
     struct Card: Identifiable, Hashable {

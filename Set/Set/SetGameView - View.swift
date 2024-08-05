@@ -12,7 +12,7 @@ struct SetGameView : View {
     
     typealias Cards = SetModel<CardContent>.Card
     
-    let viewModel: SetGameViewModel
+    var viewModel: SetGameViewModel
     
     private let aspectRatio: CGFloat = 2/3
     private let paddingCard: CGFloat = 3
@@ -36,6 +36,7 @@ struct SetGameView : View {
         viewModel.cards.filter { isOpen($0) }
     }
     
+    @State private var offset: CGFloat = 0
     
     var body: some View {
         NavigationStack {
@@ -57,8 +58,8 @@ struct SetGameView : View {
             .toolbarColorScheme(.dark)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        viewModel.cancelSelection()
+                    Button("Reshuffle") {
+                        viewModel.shuffle()
                     }
                 }
                 
@@ -82,7 +83,7 @@ struct SetGameView : View {
     // Отображение карт в центре экрана
     private var cards: some View {
         UniversalVGrid(openedCard, aspectRatio: aspectRatio) { card in
-            if !isDiscard(card) && isOpen(card) {
+            if !isDiscard(card) && isOpen(card)  {
                 Card(card: card)
                     .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
@@ -103,7 +104,7 @@ struct SetGameView : View {
                     }
             }
         }
-        .animation(.default, value: viewModel.startCards)
+        .animation(.default, value: openedCard)
     }
     
     // Отображение сброшенных карт
@@ -119,6 +120,11 @@ struct SetGameView : View {
                 }
             }
         }
+        .onChange(of: discardedCards, { oldValue, newValue in
+            oldValue.forEach { card in
+                openCard.remove(card.id)
+            }
+        })
         .frame(width: 40, height: deckWidth / aspectRatio)
     }
     
@@ -126,11 +132,12 @@ struct SetGameView : View {
     private var deck: some View {
         ZStack {
             ForEach(viewModel.cards) { card in
-                if !isOpen(card) {
+                if !isOpen(card) && !isDiscard(card) {
                     Card(card: card, faceDown: 1)
                         .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                         .transition(.asymmetric(insertion: .identity, removal: .identity))
                 }
+                
             }
         }
         // MARK: Добавить смещение для карт
@@ -167,9 +174,9 @@ struct SetGameView : View {
     private func isOpen(_ card: Cards) -> Bool {
         openCard.contains(card.id)
     }
+    
+
 }
-
-
 
 
 #Preview {

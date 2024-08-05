@@ -36,25 +36,15 @@ struct Card: View {
                         .foregroundStyle(.white)
                 )
                 .opacity(faceDown)
-                .animation(.default, value: faceDown)
             
             base.stroke(.green)
-                .overlay(
-                    Image(systemName: "checkmark")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(.green)
-                )
+                .overlay(Checkmark(animation: card.match) )
                 .opacity(card.match == .correctly ? 1 : 0)
             
+            
             base.stroke(.red)
-                .overlay(
-                    Image(systemName: "xmark")
-                        .font(.title2)
-                        .bold()
-                        .foregroundStyle(.red)
-                )
-                .opacity((card.match == .wrong ? 1 : 0))
+                .overlay(Xmark(animation: card.match) )
+                .opacity(card.match == .wrong ? 1 : 0)
             
         }
     }
@@ -64,6 +54,35 @@ struct Card: View {
     private struct Constants {
         static let cornerRadius: CGFloat = 10
         static let padding: CGFloat = 5
+    }
+    
+    private struct Checkmark: View {
+        
+        var animation: SetModel<CardContent>.Card.CardStatus
+        
+        var body: some View {
+            Image(systemName: animation == .correctly ? "checkmark" : "circles.hexagongrid.fill")
+                .font(.title)
+                .bold()
+                .foregroundStyle(.green)
+                .symbolEffect(.bounce, value: animation)
+                .contentTransition(.symbolEffect(.replace))
+        }
+        
+    }
+    
+    
+    private struct Xmark: View {
+        
+        var animation: SetModel<CardContent>.Card.CardStatus
+        
+        var body: some View {
+            Image(systemName: "xmark")
+                .font(.title)
+                .bold()
+                .foregroundStyle(.red)
+                .symbolEffect(.pulse, options: .repeat(3).speed(3), value: animation)
+        }
     }
 }
 

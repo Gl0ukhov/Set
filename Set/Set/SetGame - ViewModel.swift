@@ -136,9 +136,8 @@ class SetGameViewModel {
         
     }
     
-    // Функция, которая сбрасывает выбор карт
-    func cancelSelection() {
-        model.cancelSelection()
+    func shuffle() {
+        model.shuffleCard()
     }
     
 }
