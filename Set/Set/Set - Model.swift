@@ -25,8 +25,6 @@ struct SetModel<CardContent> where CardContent: Hashable {
         }}
     }
     
-    
-    
     // Фильтр по картам, у которых свойство match != nChecked
     private var matchedCardsIndexes: [Int] {
         get { cards.indices.filter { index in
@@ -36,62 +34,57 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     // Функция выбора карты и изменения selected свойства
     mutating func choose(_ card: Card) {
+        guard card.match == .nChecked else {
+            return
+        }
+        
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
             cards[chosenIndex].selected.toggle()
         }
     }
     
     // Функция проверки карты на соответствие правилам
-    mutating func checkMatch(cardsMatch: ([Card]) -> Bool) {
+    mutating func checkMatch(cardsMatch: ([Int]) -> Bool) {
+        guard selectedCardsIndexes.count <= 3 else {
+            return
+        }
+        
         if selectedCardsIndexes.count == 3 {
-            var threeCards: [Card] = []
-            for i in selectedCardsIndexes {
-                threeCards.append(cards[i])
-            }
-            if cardsMatch(threeCards) {
-                for i in selectedCardsIndexes {
-                    cards[i].match = .correctly
-                }
+            if cardsMatch(selectedCardsIndexes) {
+                selectedCardsIndexes.forEach { cards[$0].match = .correctly }
             } else {
-                for i in selectedCardsIndexes {
-                    cards[i].match = .wrong
-                }
+                selectedCardsIndexes.forEach { cards[$0].match = .wrong }
             }
         }
     }
     
-    // Функция удаления совпавших карт
+    // Функция удаления совпавших карт после нажатия на 4 карту
     mutating func removeMatchedCards(_ indexCard: ([Int]) -> Void) {
         if selectedCardsIndexes.count == 4 {
-            let indexToDiscard = matchedCardsIndexes.sorted(by: >)
-            indexCard(indexToDiscard)
-            clearSelection()
-            clearMatch()
+            indexCard(matchedCardsIndexes.sorted(by: >))
+            clearSelectionAndMatch()
         }
     }
     
+    // Функция удаления совпавших карт после нажатия на колоду
     mutating func removeAtClick(_ indexCard: ([Int]) -> Void) {
         if selectedCardsIndexes.count == 3 {
             let indexToDiscard = matchedCardsIndexes.sorted(by: >)
             indexCard(indexToDiscard)
-            clearSelection()
-            clearMatch()
+            clearSelectionAndMatch()
+            
         }
     }
     
-    private mutating func clearSelection() {
+    // Функция убирает select и match
+    private mutating func clearSelectionAndMatch() {
         for index in cards.indices {
             cards[index].selected = false
-        }
-    }
-    
-    private mutating func clearMatch() {
-        for index in cards.indices {
             cards[index].match = .nChecked
         }
     }
     
-    
+    // Функция перемешивания карт
     mutating func shuffleCard() {
         cards.shuffle()
     }

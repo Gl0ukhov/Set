@@ -101,11 +101,11 @@ class SetGameViewModel {
             var shading: Set<Double> = []
             var shape: Set<String> = []
             
-            for item in cards {
-                color.insert(item.contentCard.color)
-                number.insert(item.contentCard.number)
-                shading.insert(item.contentCard.shading)
-                shape.insert(item.contentCard.shape.rawValue)
+            for index in cards {
+                color.insert(model.cards[index].contentCard.color)
+                number.insert(model.cards[index].contentCard.number)
+                shading.insert(model.cards[index].contentCard.shading)
+                shape.insert(model.cards[index].contentCard.shape.rawValue)
             }
             
             if color.count != 2 {
