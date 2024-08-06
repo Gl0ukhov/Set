@@ -17,7 +17,7 @@ struct CardContent: Hashable {
     }
     
     static let allNumber: [Int] = [1, 2, 3]
-    static let allShading: [Double] = [1, 0.5, 0]
+    static let allShading: [Double] = [1, 0.3, 0]
     static let allColor: [Color] = [.red, .green, .blue]
     
     

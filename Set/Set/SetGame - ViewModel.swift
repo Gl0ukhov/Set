@@ -14,22 +14,9 @@ class SetGameViewModel {
     
     private var model: Model
     
-    // Переменная, которая содержит количество начальных карт
-    private var numberOfCards = 12
-    
     // Переменная, которая содержит все карты
     var cards: [Card] {
         model.cards
-    }
-    
-    // Переменная, которая открытые карты
-    var startCards: [Card] {
-        Array(model.cards[0..<numberOfCards])
-    }
-    
-    // Переменная, которая проверяет остаток в колоде
-    var disableadButton: Bool {
-        model.cards.count == numberOfCards ? true : false
     }
     
     // Инициализация модели
@@ -51,14 +38,14 @@ class SetGameViewModel {
                 }
             }
         }
-        return SetModel(cardsContent/*.shuffled()*/)
+        
+        
+        return SetModel(cardsContent.shuffled())
     }
     
     // Функция начала новой игры
-    func newGame(insertCards: ([Card]) -> Void){
+    func newGame() {
         model = SetGameViewModel.createSetGame()
-        numberOfCards = 12
-        startGame(insert: insertCards)
     }
     
     // Функция выбора карты
@@ -67,30 +54,11 @@ class SetGameViewModel {
     }
     
     // Функция выдачи трех карт 
-    func giveCards(insert: ([Card]) -> Void, remove: ([Card]) -> Void) {
-        var card = [Card]()
-        if numberOfCards < cards.count {
-            numberOfCards += 3
-            for i in (numberOfCards - 3)..<numberOfCards {
-                card.append(cards[i])
-            }
-            insert(card)
-            // MARK: Доделать - проблемы с анимацией
-            model.removeAtClick { cardsIndex in
-                var indexCard = [Card]()
-                for index in cardsIndex {
-                    if cards[index].match == .correctly {
-                        indexCard.append(cards[index])
-                    }
-                    remove(indexCard)
-                }
-            }
+    func giveCards() {
+        model.cardOpen()
+        withAnimation(.easeOut(duration: 1)) {
+            model.removeAtClick()
         }
-    }
-    
-    // Функция добавления начальных карт
-    func startGame(insert: ([Card]) -> Void ) {
-        insert(startCards)
     }
     
     // Функция проверки совпадения карт
@@ -122,20 +90,11 @@ class SetGameViewModel {
     }
    
     // Функция, которая добавляет карты в сброс
-    func remove(insert: ([Card]) -> Void) {
-        model.removeMatchedCards { cardsIndex in
-            var indexCard = [Card]()
-            for index in cardsIndex {
-                if cards[index].match == .correctly {
-                    indexCard.append(cards[index])
-                    
-                }
-            }
-            insert(indexCard)
-        }
-        
+    func remove() {
+        model.removeMatchedCards()
     }
     
+    // Функция, которая перемешивает открытые карты
     func shuffle() {
         model.shuffleCard()
     }

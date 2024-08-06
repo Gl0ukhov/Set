@@ -16,6 +16,22 @@ struct SetModel<CardContent> where CardContent: Hashable {
         for content in contentCards {
             self.cards.append(Card(contentCard: content))
         }
+        for index in 0..<12 {
+            cards[index].status = .open
+        }
+    }
+    
+    // Фильтр по картам, которые не открыты
+    private var cardsDeck: [Int] {
+        get { cards.indices.filter { index in
+            cards[index].status == .deck
+        }}
+    }
+    
+    private var cardsOpen: [Int] {
+        get { cards.indices.filter { index in
+            cards[index].status == .open
+        } }
     }
     
     // Фильтр по картам, у которых свойство selected = true
@@ -30,6 +46,17 @@ struct SetModel<CardContent> where CardContent: Hashable {
         get { cards.indices.filter { index in
             cards[index].match != .nChecked
         }}
+    }
+    
+    // Функция открытия карт
+    mutating func cardOpen() {
+        guard cardsDeck.count > 0 else {
+            return
+        }
+    
+        for i in cardsDeck[0..<3] {
+            cards[i].status = .open
+        }
     }
     
     // Функция выбора карты и изменения selected свойства
@@ -59,20 +86,26 @@ struct SetModel<CardContent> where CardContent: Hashable {
     }
     
     // Функция удаления совпавших карт после нажатия на 4 карту
-    mutating func removeMatchedCards(_ indexCard: ([Int]) -> Void) {
+    mutating func removeMatchedCards() {
         if selectedCardsIndexes.count == 4 {
-            indexCard(matchedCardsIndexes.sorted(by: >))
+            for index in matchedCardsIndexes {
+                if cards[index].match == .correctly {
+                    cards[index].status = .discard
+                }
+            }
             clearSelectionAndMatch()
         }
     }
     
     // Функция удаления совпавших карт после нажатия на колоду
-    mutating func removeAtClick(_ indexCard: ([Int]) -> Void) {
+    mutating func removeAtClick() {
         if selectedCardsIndexes.count == 3 {
-            let indexToDiscard = matchedCardsIndexes.sorted(by: >)
-            indexCard(indexToDiscard)
+            for index in matchedCardsIndexes {
+                if cards[index].match == .correctly {
+                    cards[index].status = .discard
+                }
+            }
             clearSelectionAndMatch()
-            
         }
     }
     
@@ -86,19 +119,31 @@ struct SetModel<CardContent> where CardContent: Hashable {
     
     // Функция перемешивания карт
     mutating func shuffleCard() {
-        cards.shuffle()
+        var array: [Card] = []
+        for i in cardsOpen {
+            array.append(cards[i])
+        }
+        array.shuffle()
+        for i in cardsOpen {
+            cards[i] = array.first!
+            array.removeFirst()
+        }
     }
     
     struct Card: Identifiable, Hashable {
         var selected = false
-        var match = CardStatus.nChecked
+        var status = CardStatus.deck
+        var match = CardMatch.nChecked
         let contentCard: CardContent
         
         var id = UUID()
         
-        enum CardStatus {
+        enum CardMatch {
             case correctly, wrong, nChecked
         }
         
+        enum CardStatus {
+            case deck, open, discard
+        }
     }
 }

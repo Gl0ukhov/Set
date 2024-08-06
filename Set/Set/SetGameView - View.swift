@@ -16,45 +16,39 @@ struct SetGameView : View {
     
     private let aspectRatio: CGFloat = 2/3
     private let paddingCard: CGFloat = 3
-    private let deckWidth: CGFloat = 40
+    private let deckWidth: CGFloat = 60
     private let dealAnimation: Animation = .easeOut(duration: 1)
-    private let dealInterval: TimeInterval = 0.1
     
-    // Набор сброшенных карт
-    @State private var dumpStack = Set<Cards.ID>()
-    
-    // Набор открытых карт
-    @State private var openCard = Set<Cards.ID>()
     
     // Массив сброшенных карт
     private var discardedCards: [Cards] {
-        viewModel.cards.filter {  isDiscard($0) }
+        viewModel.cards.filter {  $0.status == .discard }
     }
     
     // Массив открытых карт
     private var openedCard: [Cards] {
-        viewModel.cards.filter { isOpen($0) }
+        viewModel.cards.filter { $0.status == .open }
     }
     
-    @State private var offset: CGFloat = 0
+    // Массив кард в колоде
+    private var deckCard: [Cards] {
+        viewModel.cards.filter { $0.status == .deck }
+    }
     
     var body: some View {
         NavigationStack {
             VStack {
                 header
                 cards
+                    .padding(.horizontal, 10)
                 HStack {
                     deck
                     Spacer()
                     discard
                 }
-                .padding(20)
+                .padding(.horizontal, 50)
             }
-            .onAppear(perform: {
-                viewModel.startGame { startCards in
-                    startCards.forEach { openCard.insert($0.id)}
-                }
-            })
+            .preferredColorScheme(.light)
             .toolbarColorScheme(.dark)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -65,9 +59,7 @@ struct SetGameView : View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("New game") {
-                        viewModel.newGame {  startCards in
-                            startCards.forEach { openCard.insert($0.id)}
-                        }
+                        viewModel.newGame()
                     }
                 }
             }
@@ -83,7 +75,6 @@ struct SetGameView : View {
     // Отображение карт в центре экрана
     private var cards: some View {
         UniversalVGrid(openedCard, aspectRatio: aspectRatio) { card in
-            if !isDiscard(card) && isOpen(card)  {
                 Card(card: card)
                     .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
@@ -91,18 +82,10 @@ struct SetGameView : View {
                     .onTapGesture {
                         viewModel.chooseCard(card)
                         viewModel.checkMatch()
-                        viewModel.remove { cardRemove in
-                            var delay: TimeInterval = 0
-                            for card in cardRemove {
-                                withAnimation(dealAnimation.delay(delay)) {
-                                    let _ = dumpStack.insert(card.id)
-                                }
-                                delay += dealInterval
-                            }
+                        withAnimation(dealAnimation) {
+                            viewModel.remove()
                         }
-                        
                     }
-            }
         }
         .animation(.default, value: openedCard)
     }
@@ -120,61 +103,24 @@ struct SetGameView : View {
                 }
             }
         }
-        .onChange(of: discardedCards, { oldValue, newValue in
-            oldValue.forEach { card in
-                openCard.remove(card.id)
-            }
-        })
-        .frame(width: 40, height: deckWidth / aspectRatio)
+        .frame(width: deckWidth, height: deckWidth / aspectRatio)
     }
     
     // Отображение колоды карт
     private var deck: some View {
         ZStack {
-            ForEach(viewModel.cards) { card in
-                if !isOpen(card) && !isDiscard(card) {
-                    Card(card: card, faceDown: 1)
+            ForEach(deckCard) { card in
+                    Card(card: card)
                         .matchedGeometryEffect(id: card.id, in: cardResetNamespace)
                         .transition(.asymmetric(insertion: .identity, removal: .identity))
-                }
-                
             }
         }
-        // MARK: Добавить смещение для карт
-        .frame(width: 40, height: deckWidth / aspectRatio)
-        .opacity(viewModel.disableadButton ? 0 : 1)
-        .animation(.smooth, value: viewModel.disableadButton)
+        .frame(width: deckWidth, height: deckWidth / aspectRatio)
         .onTapGesture {
-            viewModel.giveCards(insert: {  cardOpen in
-                var delay: TimeInterval = 0
-                for card in cardOpen {
-                    withAnimation(dealAnimation.delay(delay)) {
-                        let _ = openCard.insert(card.id)
-                    }
-                    delay += dealInterval
-                }
-            }, remove: { cardRemove in
-                var delay: TimeInterval = 0
-                for card in cardRemove {
-                    withAnimation(dealAnimation.delay(delay)) {
-                        let _ = dumpStack.insert(card.id)
-                    }
-                    delay += dealInterval
-                }
-            })
+
+            viewModel.giveCards()
         }
     }
-    
-    // Проверка сброшена ли карта
-    private func isDiscard(_ card: Cards) -> Bool {
-        dumpStack.contains(card.id)
-    }
-    
-    // Проверка открыта ли карта
-    private func isOpen(_ card: Cards) -> Bool {
-        openCard.contains(card.id)
-    }
-    
 
 }
 

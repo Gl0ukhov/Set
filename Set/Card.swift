@@ -10,11 +10,9 @@ import SwiftUI
 struct Card: View {
     
     let card: SetModel<CardContent>.Card
-    var faceDown: Double = 0
     
-    init(card: SetModel<CardContent>.Card, faceDown: Double = 0) {
+    init(card: SetModel<CardContent>.Card) {
         self.card = card
-        self.faceDown = faceDown
     }
     
     var body: some View {
@@ -35,7 +33,7 @@ struct Card: View {
                         .bold()
                         .foregroundStyle(.white)
                 )
-                .opacity(faceDown)
+                .opacity(card.status == .deck ? 1 : 0)
             
             base.stroke(.green)
                 .overlay(Checkmark(animation: card.match) )
@@ -53,15 +51,15 @@ struct Card: View {
     
     private struct Constants {
         static let cornerRadius: CGFloat = 10
-        static let padding: CGFloat = 5
+        static let padding: CGFloat = 10
     }
     
     private struct Checkmark: View {
         
-        var animation: SetModel<CardContent>.Card.CardStatus
+        var animation: SetModel<CardContent>.Card.CardMatch
         
         var body: some View {
-            Image(systemName: animation == .correctly ? "checkmark" : "circles.hexagongrid.fill")
+            Image(systemName: animation == .correctly ? "checkmark" : "star.fill")
                 .font(.title)
                 .bold()
                 .foregroundStyle(.green)
@@ -74,7 +72,7 @@ struct Card: View {
     
     private struct Xmark: View {
         
-        var animation: SetModel<CardContent>.Card.CardStatus
+        var animation: SetModel<CardContent>.Card.CardMatch
         
         var body: some View {
             Image(systemName: "xmark")
