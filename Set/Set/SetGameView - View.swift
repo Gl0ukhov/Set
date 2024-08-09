@@ -49,9 +49,9 @@ struct SetGameView : View {
                 .padding(.horizontal, 50)
             }
             .preferredColorScheme(.light)
-            .toolbarColorScheme(.dark)
+            .toolbarColorScheme(.light)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
+                ToolbarItem(placement: .bottomBar) {
                     Button("Reshuffle") {
                         viewModel.shuffle()
                     }
